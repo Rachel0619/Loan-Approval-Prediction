@@ -61,6 +61,10 @@ Key insights:
 
 Rationale behind introducing this feature: Interest payments, compared to the principal, represent the real cash outflow that must be paid each year. By calculating interest_percent_income, which measures the proportion of a borrower's income dedicated to interest payments, we gain a clearer understanding of the financial burden the loan places on the borrower. 
 
+2. Introduced new feature: `loan_to_income`
+
+This feature is able to increase test score from 0.94009 to 0.94844
+
 ### Model Training
 
 - Logistic Regression
@@ -73,8 +77,10 @@ Note: to calculate this score, the model must provide probability estimates rath
 
 ### Hyperparameter Tuning
 
+I used Optuna to find the best parameters.
 
 ### Evaluation
+
 
 
 ### Feature importance and interpretation
