@@ -50,41 +50,79 @@ Key insights:
 
 1. Drop unique identifier (id column)
 2. Drop rows with missing values
-3. Drop rows with outliers using Tukey's IQR method
+3. Drop rows with outliers using Tukey's IQR method (3881 out of 87283 rows)
 4. Split features with target
 5. Encoding categorical features
 6. Balance the dataset using SMOTE
 
+Both dropping outliers and Balancing the dataset boosted the model performance. 
+
 ### Feature Engineering
 
-1. Introduced new feature: `interest_percent_income`
+In this project, several new features were introduced to provide the model with additional information that has a strong domain-specific rationale, which helped significantly improve model performance. Each of these features was crafted to capture meaningful financial indicators related to a borrower's loan and income profile, enabling the model to better assess creditworthiness and risk.
 
-Rationale behind introducing this feature: Interest payments, compared to the principal, represent the real cash outflow that must be paid each year. By calculating interest_percent_income, which measures the proportion of a borrower's income dedicated to interest payments, we gain a clearer understanding of the financial burden the loan places on the borrower. 
+1. `interest_percent_income`
+Rationale: The `interest_percent_income` feature calculates the proportion of a borrower's income that goes toward paying interest each year. This measure gives insight into the actual financial burden of the loan, as interest payments represent cash outflows that must be met regardless of the principal balance. 
 
-2. Introduced new feature: `loan_to_income`
+2. `repayment_year`
+Rationale: The `repayment_year` feature calculates the number of years required for a borrower to repay their loan. For borrowers who pay some principal annually (non-zero loan_percent_income), repayment_year is calculated as the loan amount divided by the annual repayment amount. However, for cases where `loan_percent_income` is zero, indicating no annual principal repayment, we assign a high value based on the 99th percentile of repayment_year to signify the increased risk associated with prolonged or deferred repayment. This feature provides a clear signal of repayment behavior, helping the model assess long-term credit risk more effectively.
 
-This feature is able to increase test score from 0.94009 to 0.94844
+3. `zero_repayment_risk`
+Rationale: The `zero_repayment_risk` feature flags cases where loan_percent_income is zero, meaning the borrower does not pay any principal on an annual basis. This binary feature (1 for no repayment, 0 otherwise) highlights high-risk scenarios where the loan's repayment is deferred, potentially increasing the risk of default. 
+
+4. `loan_to_income`
+Rationale: The `loan_to_income` ratio measures the loan amount relative to the borrower's income. This feature serves as a proxy for debt-to-income ratio, helping the model understand the borrower’s debt burden. Higher ratios indicate that a larger portion of income would be needed to cover loan obligations, increasing potential financial strain and risk.
+
+Adding these features are able to increase the cross-validation F1 score for base model (LogisticaRegression with default parameters) from 0.9305 to 0.9323.
+
+### Feature Selection
+
+No explicit feature selection was performed for two main reasons:
+
+- Manageable Number of Features: After feature engineering and one-hot encoding, the dataset includes only 30 features. This is a relatively manageable number, allowing models to utilize the full set without creating excessive computational overhead.
+- Domain-Specific Relevance: Each feature included has a clear, meaningful relationship to the problem of loan approval, representing valuable financial indicators and risk factors. Excluding features would risk losing critical information relevant to assessing creditworthiness and borrower risk.
+
+Additionally, I observed no significant signs of overfitting during training, indicating that the current feature set was appropriate without further dimensional reduction or selection techniques.
 
 ### Model Training
 
-- Logistic Regression
-- Random Forest
+For this project, I focused primarily on tree-based models due to their inherent ability to capture complex, nonlinear relationships in the data.
+
+- Logistic Regression (Base model)
 - Xgboost
+- LightGBM
 - Catboost
 
-Evaluation matrics: AUC-ROC score. 
-Note: to calculate this score, the model must provide probability estimates rather than just class predictions. This is done by using the predict_proba function, which outputs the probability of each class. The ROC curve is then plotted by varying the decision threshold, and the AUC represents the area under this curve. A higher AUC score indicates a better-performing model.
+#### Cross-Validation Strategy
+
+To ensure robust and generalizable results, I employed stratified cross-validation during training. Stratified cross-validation maintains the same proportion of classes in each fold as in the entire dataset, which is particularly advantageous when dealing with imbalanced datasets like loan approval data. This approach ensures that each fold contains a representative sample of both approved and rejected loans, leading to more stable and reliable performance metrics across all folds and reducing the risk of biased model performance.
+
+#### Evaluation matrics: AUC-ROC score. 
+
+A higher AUC score indicates a better-performing model in terms of its ability to correctly rank loan applicants based on risk.
+
+***Reason for choosing AUC-ROC metric***
+
+- Interpretability: AUC-ROC provides a measure of the model's ability to distinguish between approved and rejected loans across different thresholds. It evaluates how well the model can rank positive (approved) cases higher than negative (rejected) cases.
+- Probability-Based Scoring: Since loan approval decisions often depend on risk assessment, having probability estimates is valuable. By using predict_proba to output probabilities rather than binary class predictions, we can assess the model’s confidence in each decision.
+- Threshold Flexibility: AUC-ROC also allows flexibility in threshold setting, which is critical in financial contexts where we may adjust thresholds based on changing risk tolerance or economic conditions.
+
+***Note:*** to calculate this score, the model must provide probability estimates rather than just class predictions. This is done by using the predict_proba function, which outputs the probability of each class. The ROC curve is then plotted by varying the decision threshold, and the AUC represents the area under this curve. 
 
 ### Hyperparameter Tuning
 
-I used Optuna to find the best parameters.
+I used Optuna to find the best parameters for each model. Optuna offers several advantages, such as an efficient search with Tree-structured Parzen Estimator (TPE), dynamic sampling, and early stopping for unpromising trials, making it a powerful tool for hyperparameter optimization.
 
-### Evaluation
+However, I found that hyperparameter tuning provided only marginal performance improvements compared to feature engineering. In essence, tuning was like adding the final layer of cream to the cake, wchih might be helpful but not quite transformative compared to the foundational impact of well-crafted features.
 
+### Final evaluation
 
+Give a summary of the evaluation matrics for logistic regression, XGBoost, Catbbost and stacking model
+
+provide a picture of the AUC-ROC curve
 
 ### Feature importance and interpretation
 
-
+SHAP plots
 
 ## Model Deployment
