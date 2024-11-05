@@ -1,0 +1,43 @@
+name: loan_approval_prediction
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - ipykernel=6.29.2=pyh3cd1d5f_0
+  - ipython=8.21.0=pyh707e725_0
+  - ipywidgets=8.1.2=pyhd8ed1ab_0
+  - numpy=1.26.4=py311h7125741_0
+  - pandas=2.1.4=py311h6e08293_0
+  - pickleshare=0.7.5=py_1003
+  - pillow=10.2.0=py311hb9c5795_0
+  - pip=24.0=pyhd8ed1ab_0
+  - plotly=5.18.0=pyhd8ed1ab_0
+  - pyproj=3.6.1=py311h9a031f7_5
+  - python=3.11.7=hdf0ec26_1_cpython
+  - python-dateutil=2.8.2=pyhd8ed1ab_0
+  - python-fastjsonschema=2.19.1=pyhd8ed1ab_0
+  - python-tzdata=2024.1=pyhd8ed1ab_0
+  - python_abi=3.11=4_cp311
+  - scikit-base=0.7.2=py311h8d5925d_0
+  - scikit-learn=1.4.0=py311h696fe38_0
+  - scipy=1.12.0=py311h4f9446f_2
+  - seaborn=0.13.2=hd8ed1ab_0
+  - seaborn-base=0.13.2=pyhd8ed1ab_0
+  - pip:
+      - catboost==1.2.7
+      - cffi==1.16.0
+      - cloudpickle==3.1.0
+      - imbalanced-learn==0.12.4
+      - imblearn==0.0
+      - incremental==22.10.0
+      - ipylab==1.0.0
+      - jupyterlab-pygments==0.3.0
+      - jupytext==1.16.1
+      - lightgbm==4.5.0
+      - nbconvert==7.16.0
+      - optuna==4.0.0
+      - proxycurl-py==0.1.0.post1
+      - shap==0.46.0
+      - sqlalchemy==2.0.36
+      - xgboost==2.1.1
+prefix: /Users/lirt/miniconda3/envs/loan_approval_prediction
