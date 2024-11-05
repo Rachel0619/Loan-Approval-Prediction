@@ -40,4 +40,5 @@ dependencies:
       - shap==0.46.0
       - sqlalchemy==2.0.36
       - xgboost==2.1.1
+      - flask
 prefix: /Users/lirt/miniconda3/envs/loan_approval_prediction
